@@ -60,6 +60,72 @@
     function deleteVehicle(btn){
         btn.parentElement.remove();
     }
+    let allFleets = [];
+    function addFleet(){
+        let reg = document.getElementById("reg no").value.trim();
+            let cat=document.getElementById("category").value;
+            let driver = document.getElementById("driver").value.trim();
+            let available=document.getElementById("available").checked;
+            if(!reg ||!cat||!driver){
+                alert("All fields are required");
+                return;
+            }
+            let fleetObj = {
+                reg,
+                cat,
+                driver,
+                available
+            };
+            allFleets.push(fleetObj);
+            renderFleets(allFleets);
+            document.getElementById("regno").value="";
+            document.getElementById("category").value="";
+            document.getElementById("driver").value="";
+            document.getElementById("available").checked=false;
+
+        
+    }
+    function renderFleets(list){
+        let container = document.getElementById("fleetContainer");
+        container.innerHTML="";
+        list.forEach(fleet => {
+            let card = document.createElement("div");
+            card.className="card";
+            card.innerHTML= 
+            <h3>${fleet.reg}</h3>
+            <p>category: ${fleet.cat}</p>
+            <p>driver:<span class ="driver-name">${fleet.driver}</span></p>
+            <p>Status:<span class="status">${fleet.available ? "Available":"Unavailable"}</span></p>
+
+            <button onclick ="updateDriver(this,'${fleet.reg}')">Upadte Driver</button>
+            <button onclick ="changeStatus(this,'${fleet.reg}')">Change Availability</button>
+            <button onclick ="deleteVehicle(this,'${fleet.reg}')">Delete</button>
+            ;
+            container.appendChild(card);
+        });
+
+        function updateDriver(btn,reg){
+            let newDriver = prompt("Enter new driver name:");
+            if(!newDRiver || newDriver.trim() === ""){
+                alert("Driver name cannot be empty.");
+                return;
+            }
+            let fleet = allFleets.find(f => f. reg===reg);
+            fleet.driver = newDriver;
+            btn. parentElement.querySelector(".driver-name").innerText= newDriver;
+        }
+        function changeStatus(btn,reg){
+            let fleet =allFleets.find(f =>f .reg === reg);
+            fleet.available= !fleet.available;
+            btn.parentElement.querySelector(".status").innerText= fleet.available ? "Available":"unavailable";
+        }
+        function deleteVehicle(btn,reg){
+            if(confirm("are you sure you want to delete this vehicle?")){
+                allFleets= allFleets.filter(f => f. reg !== reg);
+                btn.parentElement.remove();
+            }
+        }
+    }
 </script>
 </body>
 </html>
